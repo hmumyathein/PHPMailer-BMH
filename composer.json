@@ -6,5 +6,5 @@
         "classmap": [
 	    "class.phpmailer-bmh.php"
         ]
-    },
+    }
 }
