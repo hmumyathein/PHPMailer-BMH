@@ -1,0 +1,5 @@
+{
+    "name": "hmumyathein/php-mailer-bmh",
+    "description": "PHPMailer-BMH (Bounce Mail Handler)",
+    "require": {}
+}
