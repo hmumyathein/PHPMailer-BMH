@@ -1,5 +1,10 @@
 {
     "name": "hmumyathein/php-mailer-bmh",
     "description": "PHPMailer-BMH (Bounce Mail Handler)",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "classmap": [
+	    "class.phpmailer-bmh.php"
+        ]
+    },
 }
