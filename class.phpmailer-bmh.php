@@ -251,7 +251,7 @@ class BounceMailHandler {
     // before starting the processing, let's check the delete flag and do global deletes if true
     if ( trim($this->deleteMsgDate) != '' ) {
       echo "processing global delete based on date of " . $this->deleteMsgDate . "<br />";
-      $this->globalDelete($nameRaw);
+      $this->globalDelete();
     }
     // disable move operations if server is Gmail ... Gmail does not support mailbox creation
     if ( stristr($this->mailhost,'gmail') ) {
@@ -444,7 +444,7 @@ class BounceMailHandler {
    */
   function isParameter($currParameters, $varKey, $varValue) {
     foreach ($currParameters as $object) {
-      if ( $object->attribute == $varKey ) {
+      if ( strcasecmp($object->attribute, $varKey) == 0 ) {
         if ( $object->value == $varValue ) {
           return true;
         }
@@ -531,6 +531,9 @@ class BounceMailHandler {
     }
     $rule_no     = $result['rule_no'];
     $rule_cat    = $result['rule_cat'];
+    $status_code = $result['status_code'];
+    $action = $result['action'];
+    $diagnostic_code = $result['diagnostic_code'];
     $xheader     = false;
 
     if ($rule_no == '0000') { // internal error      return false;
@@ -538,14 +541,14 @@ class BounceMailHandler {
       if ( trim($email) == '' ) {
         $email = $header->fromaddress;
       }
-      $params = array($pos,$bounce_type,$email,$subject,$xheader,$remove,$rule_no,$rule_cat,$totalFetched,$body,$header_full,$body_full);
+      $params = array($pos,$bounce_type,$email,$subject,$xheader,$remove,$rule_no,$rule_cat,$totalFetched,$body,$header_full,$body_full,$status_code,$action,$diagnostic_code);
       call_user_func_array($this->action_function,$params);
     } else { // match rule, do bounce action
       if ($this->testmode) {
         $this->output('Match: ' . $rule_no . ':' . $rule_cat . '; ' . $bounce_type . '; ' . $email);
         return true;
       } else {
-        $params = array($pos,$bounce_type,$email,$subject,$xheader,$remove,$rule_no,$rule_cat,$totalFetched,$body,$header_full,$body_full);
+        $params = array($pos,$bounce_type,$email,$subject,$xheader,$remove,$rule_no,$rule_cat,$totalFetched,$body,$header_full,$body_full,$status_code,$action,$diagnostic_code);
         return call_user_func_array($this->action_function,$params);
       }
     }
