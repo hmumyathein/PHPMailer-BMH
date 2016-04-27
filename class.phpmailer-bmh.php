@@ -216,6 +216,12 @@ class BounceMailHandler {
   public $hardMailbox = 'INBOX.hard';
 
   /*
+   * Mailbox folder to move unprocessed mails
+   * @var string
+   */
+  public $unprocessedBox = 'INBOX.unprocessed';
+
+  /*
    * Deletes messages globally prior to date in variable
    * NOTE: excludes any message folder that includes 'sent' in mailbox name
    * format is same as MySQL: 'yyyy-mm-dd'
@@ -422,10 +428,16 @@ class BounceMailHandler {
           $deleteFlag[$x] = true;
           $c_deleted++;
         }
+        // check if the move directory exists, if not create it
+        $this->mailbox_exist($this->unprocessedBox);
+        // move the message
+        @imap_mail_move($this->_mailbox_link, $x, $this->unprocessedBox);
+        $moveFlag[$x] = true;
       }
       flush();
     }
     $this->output( $this->bmh_newline . 'Closing mailbox, and purging messages' );
+    imap_expunge($this->_mailbox_link);
     imap_close($this->_mailbox_link);
     $this->output( 'Read: ' . $c_fetched . ' messages');
     $this->output( $c_processed . ' action taken' );
@@ -562,7 +574,7 @@ class BounceMailHandler {
    * @return boolean
    */
   function mailbox_exist($mailbox,$create=true) {
-    if ( trim($mailbox) == '' || !strstr($mailbox,'INBOX.') ) {
+    if ( trim($mailbox) == '') {
       // this is a critical error with either the mailbox name blank or an invalid mailbox name
       // need to stop processing and exit at this point
       echo "Invalid mailbox name for move operation. Cannot continue.<br />\n";

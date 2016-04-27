@@ -77,6 +77,9 @@ function bmhBodyRules($body,$structure,$debug_mode=false) {
     ,'remove'      => 0
     ,'rule_cat'    => 'unrecognized'
     ,'rule_no'     => '0000'
+    ,'status_code' => ''
+    ,'action'      => ''
+    ,'diagnostic_code' => ''
   );
 
   // ======== rule =========
