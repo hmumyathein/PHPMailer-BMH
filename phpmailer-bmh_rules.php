@@ -511,13 +511,14 @@ function bmhDSNRules($dsn_msg,$dsn_report,$debug_mode=false) {
   // Could be multi-line , if the new line is beginning with SPACE or HTAB
   if (preg_match ("/Diagnostic-Code:((?:[^\n]|\n[\t ])+)(?:\n[^\t ]|$)/is",$dsn_report,$match)) {
       $diag_code = $match[1];
-      $result['diagnostic_code'] = $diag_code;
   }
 
   // No Diagnostic-Code in email, use dsn message
   if (empty($diag_code)) {
     $diag_code = $dsn_msg;
   }
+
+  $result['diagnostic_code'] = $diag_code;
 
   // ======= rules ======
   if (empty($result['email'])) {
